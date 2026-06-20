@@ -8,9 +8,24 @@ import { StatTile } from "@/components/StatTile";
 import { ToggleRow } from "@/components/ToggleRow";
 import { SettingsRow } from "@/components/SettingsRow";
 import { Button } from "@/components/Button";
+import { useEnrichedHabits } from "@/store/useHabits";
 
 // Ekran profilu z podsumowaniem, preferencjami i ustawieniami
 export default function ProfileScreen() {
+  const habits = useEnrichedHabits();
+
+  // Podsumowania liczone z magazynu
+  const activeHabits = habits.length;
+  const bestStreak = habits.reduce((max, h) => Math.max(max, h.streak), 0);
+  // Liczba unikalnych dni z dowolnym wykonaniem
+  const allDates = new Set<string>();
+  habits.forEach((h) => h.completions.forEach((d) => allDates.add(d)));
+  const completedDays = allDates.size;
+  // Srednia skutecznosc wszystkich nawykow
+  const consistency = habits.length
+    ? Math.round(habits.reduce((sum, h) => sum + h.completionRate, 0) / habits.length)
+    : 0;
+
   // Stany przelacznikow preferencji
   const [darkMode, setDarkMode] = useState(true);
   const [notifications, setNotifications] = useState(true);
@@ -37,10 +52,10 @@ export default function ProfileScreen() {
           </Text>
           <View style={styles.chipRow}>
             <View style={styles.chip}>
-              <Text style={styles.chipText}>4 active habits</Text>
+              <Text style={styles.chipText}>{activeHabits} active habits</Text>
             </View>
             <View style={styles.chip}>
-              <Text style={styles.chipText}>12 day streak</Text>
+              <Text style={styles.chipText}>{bestStreak} day streak</Text>
             </View>
           </View>
         </View>
@@ -50,9 +65,9 @@ export default function ProfileScreen() {
       <Card>
         <Text style={styles.sectionTitle}>Quick summary</Text>
         <View style={styles.statRow}>
-          <StatTile value="24" label="Completed days" />
-          <StatTile value="82%" label="Consistency" />
-          <StatTile value="4" label="Active habits" />
+          <StatTile value={String(completedDays)} label="Completed days" />
+          <StatTile value={`${consistency}%`} label="Consistency" />
+          <StatTile value={String(activeHabits)} label="Active habits" />
         </View>
       </Card>
 

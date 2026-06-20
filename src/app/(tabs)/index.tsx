@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ScrollView, View, Text, Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,24 +5,17 @@ import { colors, spacing, radius, fontSize, fontWeight } from "@/constants/theme
 import { ProgressCard } from "@/components/ProgressCard";
 import { HabitCard } from "@/components/HabitCard";
 import { Card } from "@/components/Card";
-import { habits as initialHabits } from "@/data/mock";
+import { useHabits, useEnrichedHabits } from "@/store/useHabits";
 
 // Ekran glowny z dziennym postepem i lista nawykow
 export default function HomeScreen() {
   const router = useRouter();
-  // Stan lokalny nawykow umozliwiajacy oznaczanie wykonania
-  const [habits, setHabits] = useState(initialHabits);
-
-  // Przelaczenie stanu wykonania wybranego nawyku
-  function toggleHabit(id: string) {
-    setHabits((prev) =>
-      prev.map((h) => (h.id === id ? { ...h, done: !h.done } : h))
-    );
-  }
+  const habits = useEnrichedHabits();              // nawyki z wyliczonymi statystykami
+  const toggleToday = useHabits((s) => s.toggleToday); // akcja oznaczania wykonania
 
   // Liczba wykonanych nawykow oraz procent ukonczenia dnia
   const doneCount = habits.filter((h) => h.done).length;
-  const percent = Math.round((doneCount / habits.length) * 100);
+  const percent = habits.length ? Math.round((doneCount / habits.length) * 100) : 0;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -65,7 +57,7 @@ export default function HomeScreen() {
             meta={habit.meta}
             streak={habit.streak}
             done={habit.done}
-            onToggle={() => toggleHabit(habit.id)}
+            onToggle={() => toggleToday(habit.id)}
           />
         ))}
       </View>

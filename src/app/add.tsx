@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ScrollView, View, Text, TextInput, Pressable, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, radius, fontSize, fontWeight, accentColors } from "@/constants/theme";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -8,20 +8,30 @@ import { Card } from "@/components/Card";
 import { DayPills } from "@/components/DayPills";
 import { ToggleRow } from "@/components/ToggleRow";
 import { Button } from "@/components/Button";
+import { useHabits } from "@/store/useHabits";
 
 // Dostepne ikony kategorii nawyku
 const ICONS = ["💧", "📚", "🏃", "🧘", "🍎", "😴"];
 
-// Ekran tworzenia nowego nawyku
+// Ekran tworzenia oraz edycji nawyku
 export default function AddHabitScreen() {
   const router = useRouter();
+  const { id } = useLocalSearchParams<{ id?: string }>();
 
-  // Stany pol formularza
-  const [name, setName] = useState("");
-  const [icon, setIcon] = useState(ICONS[0]);
-  const [color, setColor] = useState(accentColors.purple);
-  const [days, setDays] = useState(["Mon", "Tue", "Wed", "Thu", "Fri"]);
-  const [goal, setGoal] = useState("1 time");
+  // Akcje magazynu
+  const addHabit = useHabits((s) => s.addHabit);
+  const updateHabit = useHabits((s) => s.updateHabit);
+  // Edytowany nawyk, jesli przekazano identyfikator
+  const existing = useHabits((s) => (id ? s.habits.find((h) => h.id === id) : undefined));
+  const editing = Boolean(existing);
+
+  // Stany pol formularza (przy edycji wypelnione danymi nawyku)
+  const [name, setName] = useState(existing?.name ?? "");
+  const [icon, setIcon] = useState(existing?.emoji ?? ICONS[0]);
+  const [color, setColor] = useState(existing?.color ?? accentColors.purple);
+  const [days, setDays] = useState<string[]>(existing?.days ?? ["Mon", "Tue", "Wed", "Thu", "Fri"]);
+  const [goal, setGoal] = useState(existing?.goal ?? "1 time");
+  const [time, setTime] = useState(existing?.time ?? "08:00 PM");
   const [reminder, setReminder] = useState(true);
 
   // Przelaczenie wyboru dnia tygodnia
@@ -31,12 +41,34 @@ export default function AddHabitScreen() {
     );
   }
 
+  // Zapis nowego lub zaktualizowanego nawyku
+  function save() {
+    const payload = {
+      name: name.trim() || "New habit",
+      emoji: icon,
+      color,
+      meta: goal,
+      days,
+      goal,
+      time,
+    };
+    if (existing) {
+      updateHabit(existing.id, payload);
+    } else {
+      addHabit(payload);
+    }
+    router.back();
+  }
+
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       {/* Naglowek z przyciskiem powrotu */}
       <View style={styles.headerRow}>
         <View style={styles.flex}>
-          <ScreenHeader label="Create a new habit" title="Add Habit" />
+          <ScreenHeader
+            label={editing ? "Update your habit" : "Create a new habit"}
+            title={editing ? "Edit Habit" : "Add Habit"}
+          />
         </View>
         <Pressable style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={20} color={colors.textPrimary} />
@@ -107,10 +139,12 @@ export default function AddHabitScreen() {
           </View>
           <View style={styles.flex}>
             <Text style={styles.fieldLabel}>Time</Text>
-            {/* Pole czasu jako podglad — wybor godziny dodawany w kroku 5 */}
-            <View style={styles.selectBox}>
-              <Text style={styles.selectText}>08:00 PM</Text>
-            </View>
+            <TextInput
+              style={styles.input}
+              value={time}
+              onChangeText={setTime}
+              placeholderTextColor={colors.textSecondary}
+            />
           </View>
         </View>
       </Card>
@@ -126,7 +160,7 @@ export default function AddHabitScreen() {
         />
       </Card>
 
-      <Button title="Save Habit" onPress={() => router.back()} />
+      <Button title={editing ? "Save changes" : "Save Habit"} onPress={save} />
     </ScrollView>
   );
 }

@@ -4,11 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, radius } from "@/constants/theme";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { HabitCard } from "@/components/HabitCard";
-import { habits } from "@/data/mock";
+import { useHabits, useEnrichedHabits } from "@/store/useHabits";
 
 // Ekran pelnej listy nawykow (otwierany z odnosnika "See all")
 export default function AllHabitsScreen() {
   const router = useRouter();
+  const habits = useEnrichedHabits();
+  const toggleToday = useHabits((s) => s.toggleToday);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -31,6 +33,7 @@ export default function AllHabitsScreen() {
             meta={habit.meta}
             streak={habit.streak}
             done={habit.done}
+            onToggle={() => toggleToday(habit.id)}
           />
         </Pressable>
       ))}

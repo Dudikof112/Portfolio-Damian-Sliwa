@@ -5,14 +5,28 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { Card } from "@/components/Card";
 import { HabitIcon } from "@/components/HabitIcon";
 import { StreakBadge } from "@/components/StreakBadge";
-import { habits, summary } from "@/data/mock";
+import { useEnrichedHabits } from "@/store/useHabits";
 
 // Skrocone nazwy dni tygodnia na wykresie
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 // Ekran statystyk z przegladem tygodnia i najlepszymi nawykami
 export default function StatsScreen() {
-  // Trzy najskuteczniejsze nawyki posortowane malejaco
+  const habits = useEnrichedHabits();
+
+  // Podsumowania liczone na biezaco z magazynu
+  const activeHabits = habits.length;
+  const bestStreak = habits.reduce((max, h) => Math.max(max, h.streak), 0);
+  const doneSlots = habits.reduce((sum, h) => sum + h.week.filter(Boolean).length, 0);
+  const totalSlots = habits.length * 7;
+  const weeklyPercent = totalSlots ? Math.round((doneSlots / totalSlots) * 100) : 0;
+
+  // Aktywnosc tygodniowa — udzial wykonanych nawykow w kazdym dniu (0-1)
+  const weeklyActivity = DAYS.map((_, i) =>
+    habits.length ? habits.filter((h) => h.week[i]).length / habits.length : 0
+  );
+
+  // Trzy najskuteczniejsze nawyki
   const topHabits = [...habits]
     .sort((a, b) => b.completionRate - a.completionRate)
     .slice(0, 3);
@@ -36,13 +50,13 @@ export default function StatsScreen() {
             </Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.circleText}>{summary.weeklyPercent}%</Text>
+            <Text style={styles.circleText}>{weeklyPercent}%</Text>
           </View>
         </View>
         <View style={styles.miniRow}>
-          <MiniStat value={summary.activeHabits} label="Active habits" />
-          <MiniStat value={summary.habitsDone} label="Habits done" />
-          <MiniStat value={summary.bestStreak} label="Best streak" />
+          <MiniStat value={activeHabits} label="Active habits" />
+          <MiniStat value={doneSlots} label="Habits done" />
+          <MiniStat value={bestStreak} label="Best streak" />
         </View>
       </LinearGradient>
 
@@ -53,7 +67,7 @@ export default function StatsScreen() {
           <Text style={styles.link}>Last 7 days</Text>
         </View>
         <View style={styles.chart}>
-          {summary.weeklyActivity.map((value, i) => (
+          {weeklyActivity.map((value, i) => (
             <View key={i} style={styles.barColumn}>
               <View style={styles.barTrack}>
                 <View style={[styles.barFill, { height: `${value * 100}%` }]} />
@@ -70,7 +84,7 @@ export default function StatsScreen() {
           <View style={styles.flex}>
             <Text style={styles.cardTitle}>Best streak</Text>
             <Text style={styles.cardText}>
-              Your longest current streak is {summary.bestStreak} days. Keep going to beat your record.
+              Your longest current streak is {bestStreak} days. Keep going to beat your record.
             </Text>
           </View>
           <View style={styles.flameBox}>
