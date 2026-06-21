@@ -13,6 +13,7 @@ import { enrich, useHabits } from "@/store/useHabits";
 import {
   cancelHabitReminder
 } from "@/utils/notifications";
+import { goBack } from "@/utils/nav";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -43,7 +44,7 @@ export default function HabitDetailsScreen() {
         <Button
           title="Go back"
           variant="secondary"
-          onPress={() => router.back()}
+          onPress={() => goBack()}
         />
       </View>
     );
@@ -73,7 +74,7 @@ export default function HabitDetailsScreen() {
               await cancelHabitReminder(habit.notificationId);
             }
             deleteHabit(habit.id);
-            router.back();
+            goBack();
           },
         },
       ],
@@ -87,7 +88,7 @@ export default function HabitDetailsScreen() {
         <Pressable style={styles.iconButton} onPress={openEdit}>
           <Ionicons name="pencil" size={18} color={colors.textPrimary} />
         </Pressable>
-        <Pressable style={styles.iconButton} onPress={() => router.back()}>
+        <Pressable style={styles.iconButton} onPress={() => goBack()}>
           <Ionicons name="arrow-back" size={18} color={colors.textPrimary} />
         </Pressable>
       </View>

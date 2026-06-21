@@ -17,8 +17,9 @@ import {
   scheduleHabitReminder,
   setupNotifications,
 } from "@/utils/notifications";
+import { goBack } from "@/utils/nav";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   Pressable,
@@ -34,7 +35,6 @@ const ICONS = ["💧", "📚", "🏃", "🧘", "🍎", "😴"];
 
 // Ekran tworzenia oraz edycji nawyku
 export default function AddHabitScreen() {
-  const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
 
   // Akcje magazynu
@@ -99,7 +99,7 @@ export default function AddHabitScreen() {
     } else {
       addHabit(payload);
     }
-    router.back();
+    goBack();
   }
 
   return (
@@ -112,7 +112,7 @@ export default function AddHabitScreen() {
             title={editing ? "Edit Habit" : "Add Habit"}
           />
         </View>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Pressable style={styles.backButton} onPress={() => goBack()}>
           <Ionicons name="arrow-back" size={20} color={colors.textPrimary} />
         </Pressable>
       </View>

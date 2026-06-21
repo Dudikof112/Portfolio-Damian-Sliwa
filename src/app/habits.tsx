@@ -1,5 +1,6 @@
 import { ScrollView, View, Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { goBack } from "@/utils/nav";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, radius } from "@/constants/theme";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -18,7 +19,7 @@ export default function AllHabitsScreen() {
         <View style={styles.flex}>
           <ScreenHeader label="All your habits" title="Habits" />
         </View>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Pressable style={styles.backButton} onPress={() => goBack()}>
           <Ionicons name="arrow-back" size={20} color={colors.textPrimary} />
         </Pressable>
       </View>
