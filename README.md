@@ -1,98 +1,109 @@
-<<<<<<< HEAD
-# Welcome to your Expo app 👋
+# StreakUp
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplikacja mobilna do śledzenia codziennych nawyków i monitorowania postępów. Wspiera budowanie regularności poprzez system streaków (ciągłości), wizualizację postępów oraz czytelny, ciemny interfejs.
 
-## Get started
+Projekt portfolio zbudowany w React Native (Expo).
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## Funkcje
 
-2. Start the app
+- Dodawanie, edycja i usuwanie nawyków
+- Oznaczanie wykonania na dany dzień z **trwałym zapisem** (dane przeżywają zamknięcie aplikacji)
+- **Streaki** (ciągłość wykonywania) liczone na podstawie historii
+- Statystyki i analiza postępów: tygodniowy przegląd, wykres aktywności, najlepsze nawyki
+- Kalendarz z oznaczonymi dniami wykonania
+- Profil z podsumowaniem i ustawieniami
+- **Lokalne przypomnienia** o nawykach o wybranej porze
+- Spójny, ciemny motyw oparty na własnym systemie komponentów
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## Zrzuty ekranu
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Dashboard | Add Habit | Habit Details |
+|---|---|---|
+| ![Dashboard](Dashboard.png) | ![Add Habit](Add_Habit.png) | ![Habit Details](Habit%20Details.png) |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+| Statistics | Profile |
+|---|---|
+| ![Statistics](Statistic.png) | ![Profile](Profile.png) |
 
-## Get a fresh project
+> Jeśli zrzuty zostaną przeniesione do osobnego folderu (np. `docs/`), zaktualizuj ścieżki powyżej.
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
+## Widoki aplikacji
+
+1. **Dashboard (Home)** — lista nawyków na dziś, dzienny postęp i szybkie oznaczanie wykonania
+2. **Add Habit** — tworzenie i edycja nawyku (nazwa, ikona, kolor, dni, cel, godzina, przypomnienie)
+3. **Habit Details** — szczegóły nawyku, statystyki i historia bieżącego tygodnia
+4. **Statistics** — przegląd tygodnia, wykres aktywności i najlepsze nawyki
+5. **Calendar** — kalendarz wykonań
+6. **Profile** — podsumowanie, preferencje i ustawienia
+
+---
+
+## Stack technologiczny
+
+- **React Native** + **Expo** (Expo Router — nawigacja oparta na plikach)
+- **TypeScript**
+- **Zustand** + **AsyncStorage** — globalny stan z trwałym zapisem
+- **expo-notifications** — lokalne przypomnienia
+- **react-native-calendars** — widok kalendarza
+- **expo-linear-gradient**, **@expo/vector-icons** — interfejs
+
+---
+
+## Struktura projektu
+
+```
+src/
+├─ app/                 # ekrany i nawigacja (Expo Router)
+│  ├─ (tabs)/           # zakladki: Home, Stats, Calendar, Profile
+│  ├─ habit/[id].tsx    # szczegoly nawyku
+│  ├─ add.tsx           # tworzenie / edycja nawyku
+│  └─ habits.tsx        # pelna lista nawykow
+├─ components/          # komponenty UI wielokrotnego uzytku
+├─ constants/           # motyw (kolory, typografia, odstepy)
+├─ store/               # magazyn nawykow (Zustand + AsyncStorage)
+└─ utils/               # statystyki nawykow i powiadomienia
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## Uruchomienie
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Wymagania
 
-## Learn more
+- Node.js w wersji LTS (20 lub nowszej)
+- Aplikacja **Expo Go** na telefonie (Android/iOS) lub emulator
 
-To learn more about developing your project with Expo, look at the following resources:
+### Instalacja
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+git clone https://github.com/Dudikof112/Portfolio-Damian-Sliwa.git
+cd Portfolio-Damian-Sliwa
+npm install
+npx expo start
+```
 
-## Join the community
+Następnie zeskanuj kod QR aplikacją Expo Go.
 
-Join our community of developers creating universal apps.
+> Jeśli telefon nie łączy się z serwerem przez sieć lokalną, użyj trybu tunelu:
+> ```bash
+> npx expo start --tunnel
+> ```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-=======
-# Portfolio-Damian-Sliwa
+---
 
-Habit Tracker (StreakUp)
-Aplikacja mobilna służąca do śledzenia codziennych nawyków oraz monitorowania postępów użytkownika.
+## Uwagi
 
-Celem aplikacji jest wsparcie użytkownika w budowaniu regularnych nawyków poprzez:
+- Lokalne przypomnienia działają na fizycznym urządzeniu (nie na emulatorze). Powiadomienia push nie są obsługiwane w Expo Go — wymagałyby development buildu.
+- Przy pierwszym uruchomieniu aplikacja zawiera kilka przykładowych nawyków; po oznaczaniu i tworzeniu własnych dane są w pełni Twoje i zapisywane lokalnie.
 
-umożliwienie łatwego zarządzania nawykami
-wizualizację postępów
-motywowanie poprzez system streaków (ciągłości)
-zapewnienie prostego i czytelnego interfejsu
-- Funkcjonalności
-- dodawanie nowych nawyków
-- edycja i usuwanie nawyków
-- oznaczanie wykonania na dany dzień
-- śledzenie streaków (ciągłości wykonywania)
-- przegląd historii aktywności
-- statystyki i analiza postępów
-- profil użytkownika i ustawienia
-- Widoki aplikacji
+---
 
-Aplikacja składa się z następujących ekranów:
-1. Dashboard (Home)
-  - lista nawyków
-  - dzienny postęp
-  - szybkie oznaczanie wykonania
-2. Add Habit
-  - tworzenie nowego nawyku
-  - konfiguracja parametrów (nazwa, dni, przypomnienia)
-3. Habit Details
-  - szczegóły wybranego nawyku
-  - historia wykonania
-  - aktualny streak
-4. Statistics
-  - analiza postępów
-  - wizualizacja danych
-5. Profile / Settings
-  - ustawienia użytkownika
-  - konfiguracja aplikacji
->>>>>>> 5cdfae49c61e46ee5c226c8104dd07d0339a588c
+## Autor
+
+Damian Śliwa

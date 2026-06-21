@@ -1,14 +1,33 @@
-import { useState } from "react";
-import { ScrollView, View, Text, TextInput, Pressable, StyleSheet } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { colors, spacing, radius, fontSize, fontWeight, accentColors } from "@/constants/theme";
-import { ScreenHeader } from "@/components/ScreenHeader";
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { DayPills } from "@/components/DayPills";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { ToggleRow } from "@/components/ToggleRow";
-import { Button } from "@/components/Button";
+import {
+  accentColors,
+  colors,
+  fontSize,
+  fontWeight,
+  radius,
+  spacing,
+} from "@/constants/theme";
 import { useHabits } from "@/store/useHabits";
+import {
+  cancelHabitReminder,
+  scheduleHabitReminder,
+  setupNotifications,
+} from "@/utils/notifications";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 // Dostepne ikony kategorii nawyku
 const ICONS = ["💧", "📚", "🏃", "🧘", "🍎", "😴"];
@@ -22,14 +41,18 @@ export default function AddHabitScreen() {
   const addHabit = useHabits((s) => s.addHabit);
   const updateHabit = useHabits((s) => s.updateHabit);
   // Edytowany nawyk, jesli przekazano identyfikator
-  const existing = useHabits((s) => (id ? s.habits.find((h) => h.id === id) : undefined));
+  const existing = useHabits((s) =>
+    id ? s.habits.find((h) => h.id === id) : undefined,
+  );
   const editing = Boolean(existing);
 
   // Stany pol formularza (przy edycji wypelnione danymi nawyku)
   const [name, setName] = useState(existing?.name ?? "");
   const [icon, setIcon] = useState(existing?.emoji ?? ICONS[0]);
   const [color, setColor] = useState(existing?.color ?? accentColors.purple);
-  const [days, setDays] = useState<string[]>(existing?.days ?? ["Mon", "Tue", "Wed", "Thu", "Fri"]);
+  const [days, setDays] = useState<string[]>(
+    existing?.days ?? ["Mon", "Tue", "Wed", "Thu", "Fri"],
+  );
   const [goal, setGoal] = useState(existing?.goal ?? "1 time");
   const [time, setTime] = useState(existing?.time ?? "08:00 PM");
   const [reminder, setReminder] = useState(true);
@@ -37,12 +60,30 @@ export default function AddHabitScreen() {
   // Przelaczenie wyboru dnia tygodnia
   function toggleDay(day: string) {
     setDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
     );
   }
 
   // Zapis nowego lub zaktualizowanego nawyku
-  function save() {
+  // Zapis nowego lub zaktualizowanego nawyku wraz z przypomnieniem
+  async function save() {
+    // Anulowanie poprzedniego przypomnienia przy edycji
+    if (existing?.notificationId) {
+      await cancelHabitReminder(existing.notificationId);
+    }
+
+    // Zaplanowanie nowego przypomnienia, jesli przelacznik jest wlaczony
+    let notificationId: string | null = null;
+    if (reminder) {
+      const granted = await setupNotifications();
+      if (granted) {
+        notificationId = await scheduleHabitReminder(
+          name.trim() || "New habit",
+          time,
+        );
+      }
+    }
+
     const payload = {
       name: name.trim() || "New habit",
       emoji: icon,
@@ -51,6 +92,7 @@ export default function AddHabitScreen() {
       days,
       goal,
       time,
+      notificationId,
     };
     if (existing) {
       updateHabit(existing.id, payload);
@@ -187,7 +229,11 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.bold,
     marginBottom: spacing.xs,
   },
-  fieldLabel: { color: colors.textSecondary, fontSize: fontSize.sm, marginTop: spacing.sm },
+  fieldLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginTop: spacing.sm,
+  },
   input: {
     backgroundColor: colors.surfaceElevated,
     borderRadius: radius.md,

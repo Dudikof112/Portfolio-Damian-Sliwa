@@ -1,12 +1,28 @@
-import { ScrollView, View, Text, Pressable, Alert, StyleSheet } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { colors, spacing, radius, fontSize, fontWeight } from "@/constants/theme";
-import { Card } from "@/components/Card";
-import { HabitIcon } from "@/components/HabitIcon";
-import { Chip } from "@/components/Chip";
 import { Button } from "@/components/Button";
-import { useHabits, enrich } from "@/store/useHabits";
+import { Card } from "@/components/Card";
+import { Chip } from "@/components/Chip";
+import { HabitIcon } from "@/components/HabitIcon";
+import {
+  colors,
+  fontSize,
+  fontWeight,
+  radius,
+  spacing,
+} from "@/constants/theme";
+import { enrich, useHabits } from "@/store/useHabits";
+import {
+  cancelHabitReminder
+} from "@/utils/notifications";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 // Skrocone nazwy dni tygodnia
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -24,7 +40,11 @@ export default function HabitDetailsScreen() {
     return (
       <View style={styles.empty}>
         <Text style={styles.emptyText}>Habit not found.</Text>
-        <Button title="Go back" variant="secondary" onPress={() => router.back()} />
+        <Button
+          title="Go back"
+          variant="secondary"
+          onPress={() => router.back()}
+        />
       </View>
     );
   }
@@ -38,19 +58,26 @@ export default function HabitDetailsScreen() {
     router.push({ pathname: "/add", params: { id: habit.id } });
   }
 
-  // Potwierdzenie i usuniecie nawyku
+  // Potwierdzenie i usuniecie nawyku wraz z jego przypomnieniem
   function confirmDelete() {
-    Alert.alert("Delete habit", `Remove "${habit.name}"? This cannot be undone.`, [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: () => {
-          deleteHabit(habit.id);
-          router.back();
+    Alert.alert(
+      "Delete habit",
+      `Remove "${habit.name}"? This cannot be undone.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            if (habit.notificationId) {
+              await cancelHabitReminder(habit.notificationId);
+            }
+            deleteHabit(habit.id);
+            router.back();
+          },
         },
-      },
-    ]);
+      ],
+    );
   }
 
   return (
@@ -101,9 +128,15 @@ export default function HabitDetailsScreen() {
           {DAYS.map((day, i) => (
             <View key={day} style={styles.weekColumn}>
               <Text style={styles.weekDay}>{day}</Text>
-              <View style={[styles.weekDot, habit.week[i] && styles.weekDotDone]}>
+              <View
+                style={[styles.weekDot, habit.week[i] && styles.weekDotDone]}
+              >
                 {habit.week[i] ? (
-                  <Ionicons name="checkmark" size={14} color={colors.textPrimary} />
+                  <Ionicons
+                    name="checkmark"
+                    size={14}
+                    color={colors.textPrimary}
+                  />
                 ) : (
                   <Text style={styles.weekDash}>—</Text>
                 )}
@@ -150,13 +183,34 @@ const styles = StyleSheet.create({
   },
 
   headerCard: { alignItems: "flex-start", gap: spacing.sm },
-  detailsLabel: { color: colors.textSecondary, fontSize: fontSize.sm, marginTop: spacing.sm },
-  detailsName: { color: colors.textPrimary, fontSize: fontSize.xl, fontWeight: fontWeight.bold },
-  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginTop: spacing.sm },
+  detailsLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginTop: spacing.sm,
+  },
+  detailsName: {
+    color: colors.textPrimary,
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+  },
+  chipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
 
   statCard: { alignItems: "center" },
-  statValue: { color: colors.textPrimary, fontSize: fontSize.xl, fontWeight: fontWeight.bold },
-  statLabel: { color: colors.textSecondary, fontSize: fontSize.sm, marginTop: 2 },
+  statValue: {
+    color: colors.textPrimary,
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+  },
+  statLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginTop: 2,
+  },
 
   weekHeader: {
     flexDirection: "row",
@@ -164,8 +218,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: spacing.md,
   },
-  cardTitle: { color: colors.textPrimary, fontSize: fontSize.lg, fontWeight: fontWeight.bold },
-  link: { color: colors.primaryLight, fontSize: fontSize.sm, fontWeight: fontWeight.medium },
+  cardTitle: {
+    color: colors.textPrimary,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+  },
+  link: {
+    color: colors.primaryLight,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
   weekRow: { flexDirection: "row", justifyContent: "space-between" },
   weekColumn: { alignItems: "center", gap: spacing.sm },
   weekDay: { color: colors.textSecondary, fontSize: fontSize.xs },
@@ -181,5 +243,9 @@ const styles = StyleSheet.create({
   weekDash: { color: colors.textSecondary, fontSize: fontSize.sm },
 
   deleteButton: { alignItems: "center", paddingVertical: spacing.sm },
-  deleteText: { color: "#F87171", fontSize: fontSize.md, fontWeight: fontWeight.medium },
+  deleteText: {
+    color: "#F87171",
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.medium,
+  },
 });

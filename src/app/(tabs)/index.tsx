@@ -1,21 +1,29 @@
-import { ScrollView, View, Text, Pressable, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { colors, spacing, radius, fontSize, fontWeight } from "@/constants/theme";
-import { ProgressCard } from "@/components/ProgressCard";
-import { HabitCard } from "@/components/HabitCard";
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
-import { useHabits, useEnrichedHabits } from "@/store/useHabits";
+import { HabitCard } from "@/components/HabitCard";
+import { ProgressCard } from "@/components/ProgressCard";
+import {
+  colors,
+  fontSize,
+  fontWeight,
+  radius,
+  spacing,
+} from "@/constants/theme";
+import { useEnrichedHabits, useHabits } from "@/store/useHabits";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 // Ekran glowny z dziennym postepem i lista nawykow
 export default function HomeScreen() {
   const router = useRouter();
-  const habits = useEnrichedHabits();              // nawyki z wyliczonymi statystykami
-  const toggleToday = useHabits((s) => s.toggleToday); // akcja oznaczania wykonania
+  const habits = useEnrichedHabits();
+  const toggleToday = useHabits((s) => s.toggleToday);
 
-  // Liczba wykonanych nawykow oraz procent ukonczenia dnia
   const doneCount = habits.filter((h) => h.done).length;
-  const percent = habits.length ? Math.round((doneCount / habits.length) * 100) : 0;
+  const percent = habits.length
+    ? Math.round((doneCount / habits.length) * 100)
+    : 0;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -25,7 +33,10 @@ export default function HomeScreen() {
           <Text style={styles.title}>Your habits today</Text>
         </View>
         <View style={styles.actions}>
-          <Pressable style={styles.iconButton} onPress={() => router.push("/add")}>
+          <Pressable
+            style={styles.iconButton}
+            onPress={() => router.push("/add")}
+          >
             <Ionicons name="add" size={22} color={colors.textPrimary} />
           </Pressable>
           <View style={styles.avatar}>
@@ -34,40 +45,53 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <ProgressCard
-        title="Daily progress"
-        description={`You completed ${doneCount} of ${habits.length} habits today. Keep your streak alive.`}
-        percent={percent}
-      />
-
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Today's habits</Text>
-        <Pressable onPress={() => router.push("/habits")}>
-          <Text style={styles.link}>See all</Text>
-        </Pressable>
-      </View>
-
-      <View style={styles.list}>
-        {habits.map((habit) => (
-          <HabitCard
-            key={habit.id}
-            emoji={habit.emoji}
-            color={habit.color}
-            name={habit.name}
-            meta={habit.meta}
-            streak={habit.streak}
-            done={habit.done}
-            onToggle={() => toggleToday(habit.id)}
+      {habits.length === 0 ? (
+        // Stan pusty — gdy nie ma jeszcze zadnych nawykow
+        <Card style={styles.empty}>
+          <Text style={styles.emptyTitle}>No habits yet</Text>
+          <Text style={styles.emptyText}>
+            Create your first habit and start building your streaks.
+          </Text>
+          <Button title="Add habit" onPress={() => router.push("/add")} />
+        </Card>
+      ) : (
+        <>
+          <ProgressCard
+            title="Daily progress"
+            description={`You completed ${doneCount} of ${habits.length} habits today. Keep your streak alive.`}
+            percent={percent}
           />
-        ))}
-      </View>
 
-      <Card style={styles.reminder}>
-        <Text style={styles.reminderText}>
-          <Text style={styles.reminderBold}>Reminder: </Text>
-          small actions repeated every day create real long-term change.
-        </Text>
-      </Card>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Today's habits</Text>
+            <Pressable onPress={() => router.push("/habits")}>
+              <Text style={styles.link}>See all</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.list}>
+            {habits.map((habit) => (
+              <HabitCard
+                key={habit.id}
+                emoji={habit.emoji}
+                color={habit.color}
+                name={habit.name}
+                meta={habit.meta}
+                streak={habit.streak}
+                done={habit.done}
+                onToggle={() => toggleToday(habit.id)}
+              />
+            ))}
+          </View>
+
+          <Card style={styles.reminder}>
+            <Text style={styles.reminderText}>
+              <Text style={styles.reminderBold}>Reminder: </Text>
+              small actions repeated every day create real long-term change.
+            </Text>
+          </Card>
+        </>
+      )}
     </ScrollView>
   );
 }
@@ -123,6 +147,22 @@ const styles = StyleSheet.create({
   },
   list: { gap: spacing.md },
   reminder: { marginTop: spacing.sm },
-  reminderText: { color: colors.textSecondary, fontSize: fontSize.sm, lineHeight: 20 },
+  reminderText: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    lineHeight: 20,
+  },
   reminderBold: { color: colors.textPrimary, fontWeight: fontWeight.bold },
+
+  empty: { alignItems: "center", gap: spacing.md, paddingVertical: spacing.xl },
+  emptyTitle: {
+    color: colors.textPrimary,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+  },
+  emptyText: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    textAlign: "center",
+  },
 });

@@ -1,19 +1,20 @@
 // useHabits.ts
 // Globalny, trwale zapisywany magazyn nawykow oparty na Zustand i AsyncStorage.
 
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  isDoneToday,
-  currentStreak,
   completionRate,
-  weekStatus,
-  toggleDate,
+  currentStreak,
+  isDoneToday,
   todayKey,
+  toggleDate,
   toKey,
+  weekStatus,
 } from "@/utils/habitStats";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
+// Surowy nawyk przechowywany w magazynie
 // Surowy nawyk przechowywany w magazynie
 export type Habit = {
   id: string;
@@ -25,6 +26,7 @@ export type Habit = {
   goal: string;
   time: string;
   completions: string[]; // daty wykonania w formacie "RRRR-MM-DD"
+  notificationId?: string | null; // identyfikator zaplanowanego przypomnienia
 };
 
 // Nawyk wzbogacony o wyliczone statystyki (uzywany na ekranach)
@@ -118,22 +120,26 @@ export const useHabits = create<HabitsState>()(
         })),
       updateHabit: (id, patch) =>
         set((state) => ({
-          habits: state.habits.map((h) => (h.id === id ? { ...h, ...patch } : h)),
+          habits: state.habits.map((h) =>
+            h.id === id ? { ...h, ...patch } : h,
+          ),
         })),
       deleteHabit: (id) =>
         set((state) => ({ habits: state.habits.filter((h) => h.id !== id) })),
       toggleToday: (id) =>
         set((state) => ({
           habits: state.habits.map((h) =>
-            h.id === id ? { ...h, completions: toggleDate(h.completions, todayKey()) } : h
+            h.id === id
+              ? { ...h, completions: toggleDate(h.completions, todayKey()) }
+              : h,
           ),
         })),
     }),
     {
       name: "streakup-habits",
       storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
+    },
+  ),
 );
 
 // Wzbogacenie surowego nawyku o wyliczone statystyki
