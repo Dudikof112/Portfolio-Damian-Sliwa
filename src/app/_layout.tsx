@@ -1,12 +1,12 @@
 import { Stack } from "expo-router";
 import { colors } from "@/constants/theme";
 
-// Ekran (tabs) jako kotwica nawigacji — zapewnia cel powrotu przy wejsciu w glab
+// Ekran startowy (menu) jako kotwica nawigacji
 export const unstable_settings = {
-  initialRouteName: "(tabs)",
+  initialRouteName: "index",
 };
 
-// Glowny uklad aplikacji — stos z zakladkami oraz ekranami szczegolowymi
+// Glowny uklad — stos ekranow z menu jako ekranem startowym
 export default function RootLayout() {
   return (
     <Stack
@@ -15,10 +15,12 @@ export default function RootLayout() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="add" />
-      <Stack.Screen name="habit/[id]" />
-      <Stack.Screen name="habits" />
+      <Stack.Screen name="index" />
+      <Stack.Screen name="projects" />
+      <Stack.Screen name="profile" />
+      <Stack.Screen name="contact" />
+      <Stack.Screen name="add-project" />
+      <Stack.Screen name="project/[id]" />
     </Stack>
   );
 }
