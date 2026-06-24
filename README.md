@@ -49,7 +49,7 @@ src/
 
 ## Makiety (Figma)
 
-Pełny projekt graficzny w Figmie: [otwórz makiety](DODAJ_LINK_DO_FIGMY)
+Pełny projekt graficzny w Figmie: https://www.figma.com/design/TEVTGDpEhOtsswlA2er0cU/Portfolio?node-id=0-1&t=xlZSvzUE8ccUiy0P-1
 
 | Menu | Profil | Projekty |
 |---|---|---|
