@@ -1,8 +1,12 @@
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors, spacing, radius, fontSize, fontWeight } from "@/constants/theme";
 import { SettingsRow } from "@/components/SettingsRow";
+
+// Zdjecie w menu — ten sam plik co na profilu.
+// Aby zmienic: podmien plik assets/images/profile.png (jedno miejsce dla menu i profilu).
+const PHOTO = require("../../assets/images/profile.png");
 
 // Ekran startowy — menu portfolio z sekcja powitalna i odnosnikami
 export default function MenuScreen() {
@@ -17,10 +21,8 @@ export default function MenuScreen() {
         end={{ x: 1, y: 1 }}
         style={styles.hero}
       >
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>DS</Text>
-        </View>
-        <Text style={styles.name}>Damian Sliwa</Text>
+        <Image source={PHOTO} style={styles.avatar} />
+        <Text style={styles.name}>Damian Śliwa</Text>
         <Text style={styles.role}>Mobile / Frontend Developer</Text>
       </LinearGradient>
 
@@ -58,19 +60,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.sm,
   },
-  avatar: {
-    width: 88,
-    height: 88,
-    borderRadius: radius.full,
-    backgroundColor: "rgba(15, 11, 30, 0.35)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarText: {
-    color: colors.textPrimary,
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
-  },
+  avatar: { width: 88, height: 88, borderRadius: radius.full },
   name: {
     color: colors.textPrimary,
     fontSize: fontSize.xl,

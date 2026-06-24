@@ -1,108 +1,55 @@
-# StreakUp
+# Portfolio – Damian Śliwa
 
-Aplikacja mobilna do śledzenia codziennych nawyków i monitorowania postępów. Wspiera budowanie regularności poprzez system streaków (ciągłości), wizualizację postępów oraz czytelny, ciemny interfejs.
+Mobilna aplikacja-portfolio zbudowana w React Native (Expo). Prezentuje profil studenta, listę projektów wraz ze szczegółami oraz dane kontaktowe. Pozwala dodawać własne projekty przez formularz z walidacją, a dane zapisywane są lokalnie na urządzeniu.
 
-Projekt portfolio zbudowany w React Native (Expo).
+## Funkcjonalności
 
----
+- Ekran startowy (menu) z nawigacją do sekcji
+- Profil: zdjęcie, opis i umiejętności
+- Lista projektów z grafiką i technologiami
+- Szczegóły projektu z opisem, technologiami, edycją i usuwaniem
+- Dodawanie i edycja projektów przez formularz
+- Walidacja formularza (wymagany tytuł i opis)
+- Trwały zapis danych (AsyncStorage) — projekty nie znikają po restarcie
+- Ekran kontaktowy z klikalnymi pozycjami (e-mail, GitHub, LinkedIn)
 
-## Funkcje
+## Technologie
 
-- Dodawanie, edycja i usuwanie nawyków
-- Oznaczanie wykonania na dany dzień z **trwałym zapisem** (dane przeżywają zamknięcie aplikacji)
-- **Streaki** (ciągłość wykonywania) liczone na podstawie historii
-- Statystyki i analiza postępów: tygodniowy przegląd, wykres aktywności, najlepsze nawyki
-- Kalendarz z oznaczonymi dniami wykonania
-- Profil z podsumowaniem i ustawieniami
-- **Lokalne przypomnienia** o nawykach o wybranej porze
-- Spójny, ciemny motyw oparty na własnym systemie komponentów
+- React Native + Expo (SDK 54)
+- Expo Router (nawigacja oparta na plikach)
+- TypeScript
+- Zustand + AsyncStorage (stan i zapis lokalny)
+- expo-linear-gradient, @expo/vector-icons
 
----
+## Uruchomienie
 
-## Zrzuty ekranu
+Wymagania: Node.js oraz aplikacja Expo Go na telefonie (lub emulator).
 
-| Dashboard | Add Habit | Habit Details |
-|---|---|---|
-| ![Dashboard](Dashboard.png) | ![Add Habit](Add_Habit.png) | ![Habit Details](Habit%20Details.png) |
+```bash
+npm install
+npx expo start
+```
 
-| Statistics | Profile |
-|---|---|
-| ![Statistics](Statistic.png) | ![Profile](Profile.png) |
+Następnie zeskanuj kod QR aplikacją Expo Go (Android) lub aparatem (iOS). Przy problemach z połączeniem w sieci lokalnej pomaga tryb tunelu:
 
-> Jeśli zrzuty zostaną przeniesione do osobnego folderu (np. `docs/`), zaktualizuj ścieżki powyżej.
-
----
-
-## Widoki aplikacji
-
-1. **Dashboard (Home)** — lista nawyków na dziś, dzienny postęp i szybkie oznaczanie wykonania
-2. **Add Habit** — tworzenie i edycja nawyku (nazwa, ikona, kolor, dni, cel, godzina, przypomnienie)
-3. **Habit Details** — szczegóły nawyku, statystyki i historia bieżącego tygodnia
-4. **Statistics** — przegląd tygodnia, wykres aktywności i najlepsze nawyki
-5. **Calendar** — kalendarz wykonań
-6. **Profile** — podsumowanie, preferencje i ustawienia
-
----
-
-## Stack technologiczny
-
-- **React Native** + **Expo** (Expo Router — nawigacja oparta na plikach)
-- **TypeScript**
-- **Zustand** + **AsyncStorage** — globalny stan z trwałym zapisem
-- **expo-notifications** — lokalne przypomnienia
-- **react-native-calendars** — widok kalendarza
-- **expo-linear-gradient**, **@expo/vector-icons** — interfejs
-
----
+```bash
+npx expo start --tunnel
+```
 
 ## Struktura projektu
 
 ```
 src/
-├─ app/                 # ekrany i nawigacja (Expo Router)
-│  ├─ (tabs)/           # zakladki: Home, Stats, Calendar, Profile
-│  ├─ habit/[id].tsx    # szczegoly nawyku
-│  ├─ add.tsx           # tworzenie / edycja nawyku
-│  └─ habits.tsx        # pelna lista nawykow
-├─ components/          # komponenty UI wielokrotnego uzytku
-├─ constants/           # motyw (kolory, typografia, odstepy)
-├─ store/               # magazyn nawykow (Zustand + AsyncStorage)
-└─ utils/               # statystyki nawykow i powiadomienia
+  app/          ekrany i nawigacja (Expo Router)
+  components/   komponenty wielokrotnego uzytku
+  store/        magazyn projektow (Zustand + AsyncStorage)
+  constants/    motyw (kolory, odstepy, typografia)
+  utils/        funkcje pomocnicze
 ```
 
----
+## Makiety (Figma)
 
-## Uruchomienie
-
-### Wymagania
-
-- Node.js w wersji LTS (20 lub nowszej)
-- Aplikacja **Expo Go** na telefonie (Android/iOS) lub emulator
-
-### Instalacja
-
-```bash
-git clone https://github.com/Dudikof112/Portfolio-Damian-Sliwa.git
-cd Portfolio-Damian-Sliwa
-npm install
-npx expo start
-```
-
-Następnie zeskanuj kod QR aplikacją Expo Go.
-
-> Jeśli telefon nie łączy się z serwerem przez sieć lokalną, użyj trybu tunelu:
-> ```bash
-> npx expo start --tunnel
-> ```
-
----
-
-## Uwagi
-
-- Lokalne przypomnienia działają na fizycznym urządzeniu (nie na emulatorze). Powiadomienia push nie są obsługiwane w Expo Go — wymagałyby development buildu.
-- Przy pierwszym uruchomieniu aplikacja zawiera kilka przykładowych nawyków; po oznaczaniu i tworzeniu własnych dane są w pełni Twoje i zapisywane lokalnie.
-
----
+Projekty widoków przygotowane w Figmie: DODAJ_LINK_DO_FIGMY
 
 ## Autor
 
