@@ -15,7 +15,7 @@ export type Project = {
   link?: string; // adres repozytorium / strony (opcjonalnie)
 };
 
-// Dane poczatkowe — wlasne projekty z GitHuba
+// Projekty poczatkowe
 const seedProjects: Project[] = [
   {
     id: "1",

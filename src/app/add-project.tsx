@@ -88,7 +88,7 @@ export default function AddProjectScreen() {
         style={[styles.input, errors.title ? styles.inputError : null]}
         value={title}
         onChangeText={setTitle}
-        placeholder="np. StreakUp"
+        placeholder="np. eduFlow"
         placeholderTextColor={colors.textSecondary}
       />
       {errors.title ? <Text style={styles.errorText}>{errors.title}</Text> : null}

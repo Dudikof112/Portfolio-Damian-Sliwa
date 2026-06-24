@@ -18,7 +18,7 @@ import {
   View,
 } from "react-native";
 
-// ====== DANE PROFILU ======
+// Dane profilu
 const PHOTO = require("../../assets/images/profile.png");
 
 const NAME = "Damian Śliwa";
@@ -33,7 +33,6 @@ const SKILLS = [
   "Git / GitHub",
   "HTML / CSS",
 ];
-// ===========================
 
 // Ekran profilu studenta
 export default function ProfileScreen() {

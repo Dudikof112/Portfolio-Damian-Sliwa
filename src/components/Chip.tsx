@@ -6,7 +6,7 @@ type ChipProps = {
   color?: string;  // Kolor tekstu (domyslnie pomocniczy)
 };
 
-// Komponent malej pigulki z informacja (np. "8 glasses daily")
+// Komponent malej pigulki z informacja
 export function Chip({ label, color = colors.textSecondary }: ChipProps) {
   return (
     <View style={styles.chip}>

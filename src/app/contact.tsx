@@ -5,11 +5,10 @@ import { goBack } from "@/utils/nav";
 import { Ionicons } from "@expo/vector-icons";
 import { Linking, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
-// ====== DANE KONTAKTOWE ======
+// Dane kontaktowe
 const EMAIL = "praca.sliwa@gmail.com";
 const GITHUB = "https://github.com/Dudikof112";
 const LINKEDIN = "https://www.linkedin.com/in/damian-%C5%9Bliwa-1b5877166/";
-// =============================
 
 // Ekran kontaktowy z klikalnymi pozycjami
 export default function ContactScreen() {

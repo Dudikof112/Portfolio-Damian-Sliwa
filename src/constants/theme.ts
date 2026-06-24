@@ -1,5 +1,5 @@
 // theme.ts
-// Definicja motywu aplikacji StreakUp — kolory, odstepy, zaokraglenia i typografia.
+// Definicja motywu aplikacji — kolory, odstepy, zaokraglenia i typografia.
 
 // Paleta kolorow aplikacji (ciemny motyw)
 export const colors = {
@@ -13,7 +13,7 @@ export const colors = {
   streak: "#F59E0B",
 };
 
-// Kolory akcentow dostepne podczas tworzenia nawyku
+// Kolory akcentow
 export const accentColors = {
   purple: "#7C5CFC",
   lavender: "#A78BFA",

@@ -4,8 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { colors, spacing, radius, fontSize, fontWeight } from "@/constants/theme";
 import { SettingsRow } from "@/components/SettingsRow";
 
-// Zdjecie w menu — ten sam plik co na profilu.
-// Aby zmienic: podmien plik assets/images/profile.png (jedno miejsce dla menu i profilu).
+// Zdjecie profilowe (plik lokalny, wspoldzielone z ekranem profilu)
 const PHOTO = require("../../assets/images/profile.png");
 
 // Ekran startowy — menu portfolio z sekcja powitalna i odnosnikami

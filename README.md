@@ -49,7 +49,15 @@ src/
 
 ## Makiety (Figma)
 
-Projekty widoków przygotowane w Figmie: DODAJ_LINK_DO_FIGMY
+Pełny projekt graficzny w Figmie: [otwórz makiety](DODAJ_LINK_DO_FIGMY)
+
+| Menu | Profil | Projekty |
+|---|---|---|
+| ![Menu](figma/1-menu.png) | ![Profil](figma/2-profil.png) | ![Projekty](figma/3-projekty.png) |
+
+| Szczegóły | Formularz | Kontakt |
+|---|---|---|
+| ![Szczegoly](figma/4-szczegoly.png) | ![Formularz](figma/5-formularz.png) | ![Kontakt](figma/6-kontakt.png) |
 
 ## Autor
 

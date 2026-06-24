@@ -11,7 +11,7 @@ type ButtonProps = {
 
 // Komponent przycisku w dwoch wariantach: gradientowym i obrysowym
 export function Button({ title, onPress, variant = "primary", style }: ButtonProps) {
-  // Wariant obrysowy (np. "Edit habit")
+  // Wariant obrysowy
   if (variant === "secondary") {
     return (
       <Pressable onPress={onPress} style={[styles.secondary, style]}>
@@ -20,7 +20,7 @@ export function Button({ title, onPress, variant = "primary", style }: ButtonPro
     );
   }
 
-  // Wariant podstawowy z gradientem (np. "Save Habit")
+  // Wariant podstawowy z gradientem
   return (
     <Pressable onPress={onPress} style={style}>
       <LinearGradient
